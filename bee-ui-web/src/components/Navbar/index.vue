@@ -50,7 +50,7 @@ function handleChange(item: NavbarProps) {
         <slot name="title" />
       </div>
       <ul>
-        <li v-for="nav in navs" :key="nav.value" :class="{ current: currentPath === nav.value }" @click="handleChange(nav)" @mouseenter.stop="mouseover(nav.value)" @mousemove.stop>
+        <li v-for="nav in navs" :key="nav.value" :class="{ current: currentValue === nav.value }" @click="handleChange(nav)" @mouseenter.stop="mouseover(nav.value)" @mousemove.stop>
           <a href="#">{{ nav.label }}</a>
         </li>
         <div class="slider" />
@@ -73,18 +73,18 @@ function handleChange(item: NavbarProps) {
 <style scoped lang="scss">
 $navsHeight: 40px;
 $navWidth: 120px;
-$navNum: 20; // v-bind(navLength)
+$navNum: 20;
 $backgroundColor: rgba(250, 0, 146, 0.72);
 
 .container{
-  z-index: 999;
+  position: relative;
+  z-index: 99;
   nav {
     display: flex;
     justify-content: center;
     align-items: center;
     height: $navsHeight;
     background: $backgroundColor;
-    z-index: 999;
 
     .title {
       margin-right: 18px;
@@ -141,7 +141,7 @@ $backgroundColor: rgba(250, 0, 146, 0.72);
       box-shadow: 0 5px 10px -5px #bfcbd9;
       border-radius: 0 0 10px 10px;
       color: #5a5a5a;
-      background: white;
+      background: rgba(256, 256, 256, 0.85);
     }
   }
 }

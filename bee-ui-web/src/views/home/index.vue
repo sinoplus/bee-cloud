@@ -1,6 +1,7 @@
 <script setup name="Home" lang="ts">
 import { ref } from 'vue'
 import Navbar from '@/components/Navbar'
+import Carousel from './carousel'
 
 const navs = ref<any[]>([
   {
@@ -34,15 +35,17 @@ const navs = ref<any[]>([
   <div class="container">
     <header>
       <Navbar :items="navs" @change="nav => console.log(nav)">
-        <template #title>全部商品分类</template>
+        <template #title>
+          <span>全部商品分类</span>
+        </template>
         <template v-for="nav in navs" :key="nav.value" #[nav.value]>
           <div style="height: 150px">
             {{ nav.label }}
           </div>
         </template>
       </Navbar>
+      <Carousel />
     </header>
-    <div>12312312</div>
   </div>
 </template>
 
