@@ -1,0 +1,1 @@
+dubboRequestFilter=com.bee.common.dubbo.filter.DubboRequestFilter
