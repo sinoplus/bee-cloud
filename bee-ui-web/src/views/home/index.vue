@@ -4,80 +4,50 @@ import Navbar from '@/components/Navbar'
 
 const navs = ref<any[]>([
   {
-    path: '/home',
-    title: '首页',
+    value: 'home',
+    label: '首页',
   },
   {
-    path: '/flower',
-    title: '鲜花',
+    value: 'flower',
+    label: '鲜花',
   },
   {
-    path: '/cake',
-    title: '蛋糕',
+    value: 'cake',
+    label: '蛋糕',
   },
   {
-    path: '/gift',
-    title: '礼品',
+    value: 'gift',
+    label: '礼品',
   },
   {
-    path: '/flash',
-    title: '秒杀',
+    value: 'flash',
+    label: '秒杀',
   },
   {
-    path: '/group',
-    title: '团购',
+    value: 'group',
+    label: '团购',
   },
 ])
 </script>
 
 <template>
-  <Navbar :items="navs" />
+  <div class="container">
+    <header>
+      <Navbar :items="navs" @change="nav => console.log(nav)">
+        <template #title>全部商品分类</template>
+        <template v-for="nav in navs" :key="nav.value" #[nav.value]>
+          <div style="height: 150px">
+            {{ nav.label }}
+          </div>
+        </template>
+      </Navbar>
+    </header>
+    <div>12312312</div>
+  </div>
 </template>
 
 <style scoped lang="scss">
-$navs_height: 40px;
 .container{
-  margin: 0 10px 0 10px;
-  position: relative;
   color: white;
-  z-index: 1;
-
-  .navs {
-    width: 100%;
-    height: $navs_height;
-    background: #f56c6c;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-
-    .nav {
-      flex: 1;
-      text-align: center;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 0 6px;
-      border-radius: 4px;
-      &:hover {
-        background: #ff9494;
-        transform: scale(1.05);
-      }
-      &.active {
-        background: #ef4f4f;
-      }
-    }
-  }
-  .content {
-    position: absolute;
-    top: $navs_height;
-    height: 150px;
-    width: 100%;
-    z-index: -1;
-    box-shadow: 0 5px 10px -5px #bfcbd9;
-    border-radius: 0 0 10px 10px;
-    color: #5a5a5a;
-    background: white;
-  }
 }
 </style>

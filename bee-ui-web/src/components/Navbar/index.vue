@@ -1,18 +1,31 @@
 <script setup name="Home" lang="ts">
 import { computed, ref, toRefs } from 'vue'
 
+interface NavbarProps {
+  label: string
+  value: string
+  showExpand?: boolean
+}
+
 const props = defineProps({
   items: {
-    type: Array<any>,
+    type: Array<NavbarProps>,
     required: true,
   },
 })
 
+const emit = defineEmits(['change'])
+
 const { items: navs } = toRefs(props)
 
 const isShow = ref<boolean>(false)
-const hoverPath = ref(null) // 悬浮中的元素
-const activePath = ref(null) // 选中的元素
+const hoverPath = ref<string>('') // 悬浮中的元素
+const activeValue = ref<string>('')
+
+// 当前悬浮的nav
+const currentValue = computed(() => isShow.value ? hoverPath.value : activeValue.value)
+const currentNav = computed(() => navs?.value!.find(nav => nav.value === currentValue.value))
+const showExpand = computed(() => isShow.value)
 
 function mouseover(path) {
   isShow.value = true
@@ -21,19 +34,24 @@ function mouseover(path) {
 
 function mouseleave() {
   isShow.value = false
-  hoverPath.value = null
+  hoverPath.value = ''
 }
 
-const hoverNav = computed(() => navs?.value!.find(nav => nav.path === hoverPath.value))
-const currentPath = computed(() => isShow.value ? hoverPath.value : activePath.value)
+function handleChange(item: NavbarProps) {
+  activeValue.value = item.value
+  emit('change', item)
+}
 </script>
 
 <template>
   <div class="container">
     <nav class="navs" @mouseleave.stop="mouseleave">
+      <div v-if="$slots.title" class="title">
+        <slot name="title" />
+      </div>
       <ul>
-        <li v-for="nav in navs" :key="nav.path" :class="{ current: currentPath === nav.path }" @click="activePath = nav.path" @mouseenter.stop="mouseover(nav.path)" @mousemove.stop>
-          <a href="#">{{ nav.title }}</a>
+        <li v-for="nav in navs" :key="nav.value" :class="{ current: currentPath === nav.value }" @click="handleChange(nav)" @mouseenter.stop="mouseover(nav.value)" @mousemove.stop>
+          <a href="#">{{ nav.label }}</a>
         </li>
         <div class="slider" />
       </ul>
@@ -42,11 +60,10 @@ const currentPath = computed(() => isShow.value ? hoverPath.value : activePath.v
         leave-active-class="animate__animated animate__fadeOutUpBig"
         :duration="400"
       >
-        <div
-          v-if="isShow"
-          class="content"
-        >
-          {{ hoverNav.title }}
+        <div class="content">
+          <template v-for="nav in navs" :key="nav.value">
+            <slot v-if="showExpand && currentNav.value === nav.value" :name="nav.value" :data="nav" />
+          </template>
         </div>
       </transition>
     </nav>
@@ -55,16 +72,23 @@ const currentPath = computed(() => isShow.value ? hoverPath.value : activePath.v
 
 <style scoped lang="scss">
 $navsHeight: 40px;
-$backgroundColor: #f56c6c;
-$activeBgColor: #f69f9f;
+$navWidth: 120px;
+$navNum: 20; // v-bind(navLength)
+$backgroundColor: rgba(250, 0, 146, 0.72);
 
 .container{
+  z-index: 999;
   nav {
     display: flex;
     justify-content: center;
     align-items: center;
     height: $navsHeight;
     background: $backgroundColor;
+    z-index: 999;
+
+    .title {
+      margin-right: 18px;
+    }
 
     ul, li {
       margin: 0;
@@ -79,7 +103,7 @@ $activeBgColor: #f69f9f;
 
       li {
         list-style: none;
-        width: 120px;
+        width: $navWidth;
         line-height: $navsHeight;
         text-align: center;
 
@@ -87,12 +111,19 @@ $activeBgColor: #f69f9f;
           color: white;
           text-decoration: none;
         }
+
+        @for $i from 1 to $navNum + 1 {
+          &:nth-child(#{$i}):hover ~ .slider,
+          &:nth-child(#{$i}).current ~ .slider {
+            left: $navWidth * ($i - 1) + 10px;
+          }
+        }
       }
 
       .slider {
         width: 100px;
         height: $navsHeight;
-        background-color: $activeBgColor;
+        background-color: darken($backgroundColor, 1%);
         border-radius: 4px;
         position: absolute;
         left: 10px;
@@ -105,7 +136,6 @@ $activeBgColor: #f69f9f;
     .content {
       position: absolute;
       top: $navsHeight;
-      height: 150px;
       width: 100%;
       z-index: -1;
       box-shadow: 0 5px 10px -5px #bfcbd9;
@@ -113,36 +143,6 @@ $activeBgColor: #f69f9f;
       color: #5a5a5a;
       background: white;
     }
-  }
-
-  ul li:nth-child(1):hover ~ .slider,
-  li:nth-child(1).current ~ .slider {
-    left: 10px;
-  }
-
-  ul li:nth-child(2):hover ~ .slider,
-  li:nth-child(2).current ~ .slider  {
-    left: 128px;
-  }
-
-  ul li:nth-child(3):hover ~ .slider,
-  li:nth-child(3).current ~ .slider  {
-    left: 248px;
-  }
-
-  ul li:nth-child(4):hover ~ .slider,
-  li:nth-child(4).current ~ .slider  {
-    left: 368px;
-  }
-
-  ul li:nth-child(5):hover ~ .slider,
-  li:nth-child(5).current ~ .slider  {
-    left: 488px;
-  }
-
-  ul li:nth-child(6):hover ~ .slider,
-  li:nth-child(6).current ~ .slider  {
-    left: 608px;
   }
 }
 </style>

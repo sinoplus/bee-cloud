@@ -4,7 +4,6 @@ import Home from './home'
 
 <template>
   <Home />
-  <div>123</div>
 </template>
 
 <style lang="scss" scoped>
