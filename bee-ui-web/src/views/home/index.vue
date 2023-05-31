@@ -1,7 +1,7 @@
 <script setup name="Home" lang="ts">
 import { ref } from 'vue'
-import Navbar from '@/components/Navbar'
 import Carousel from './carousel'
+import Navbar from '@/components/Navbar'
 
 const navs = ref<any[]>([
   {
@@ -33,24 +33,79 @@ const navs = ref<any[]>([
 
 <template>
   <div class="container">
-    <header>
-      <Navbar :items="navs" @change="nav => console.log(nav)">
-        <template #title>
-          <span>全部商品分类</span>
-        </template>
-        <template v-for="nav in navs" :key="nav.value" #[nav.value]>
-          <div style="height: 150px">
-            {{ nav.label }}
-          </div>
-        </template>
-      </Navbar>
-      <Carousel />
-    </header>
+    <div class="content">
+      <div class="nav-bg" />
+      <header>
+        <div class="navbar">
+          <span class="title">全部商品分类</span>
+          <Navbar :items="navs" @change="nav => console.log(nav)">
+            <template v-for="nav in navs" :key="nav.value" #[nav.value]>
+              <div class="expand">
+                {{ nav.label }}
+              </div>
+            </template>
+          </Navbar>
+          <span class="call">24小时服务热线：400-000-0000</span>
+        </div>
+        <div class="carousel">
+          <Carousel />
+        </div>
+      </header>
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
+$backgroundColor: rgba(250, 0, 146, 0.72);
+$navsHeight: 40px;
 .container{
+  width: 100%;
   color: white;
+
+  .content {
+    margin: 0 auto;
+    width: 85vw;
+    min-height: 4494px;
+
+    .navbar {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      height: $navsHeight;
+      line-height: $navsHeight;
+      width: 100%;
+
+      .expand {
+        height: 150px;
+      }
+
+      .title {
+        position: relative;
+        z-index: 99;
+      }
+
+      .call {
+        position: relative;
+        z-index: 99;
+      }
+    }
+
+    .nav-bg {
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 1;
+      width: 100vw;
+      height: $navsHeight;
+      background-color: $backgroundColor;
+    }
+
+    .carousel {
+      position: absolute;
+      width: 100vw;
+      top: 0;
+      left: 0;
+    }
+  }
 }
 </style>

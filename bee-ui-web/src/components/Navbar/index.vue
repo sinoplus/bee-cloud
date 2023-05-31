@@ -21,6 +21,7 @@ const { items: navs } = toRefs(props)
 const isShow = ref<boolean>(false)
 const hoverPath = ref<string>('') // 悬浮中的元素
 const activeValue = ref<string>('')
+activeValue.value = navs?.value?.[0]?.value ?? ''
 
 // 当前悬浮的nav
 const currentValue = computed(() => isShow.value ? hoverPath.value : activeValue.value)
@@ -44,51 +45,41 @@ function handleChange(item: NavbarProps) {
 </script>
 
 <template>
-  <div class="container">
+  <div class="nav-container">
     <nav class="navs" @mouseleave.stop="mouseleave">
-      <div v-if="$slots.title" class="title">
-        <slot name="title" />
-      </div>
-      <ul>
+      <ul @mousemove.stop="mouseleave">
         <li v-for="nav in navs" :key="nav.value" :class="{ current: currentValue === nav.value }" @click="handleChange(nav)" @mouseenter.stop="mouseover(nav.value)" @mousemove.stop>
           <a href="#">{{ nav.label }}</a>
         </li>
         <div class="slider" />
       </ul>
-      <transition
-        enter-active-class="animate__animated animate__fadeInDownBig"
-        leave-active-class="animate__animated animate__fadeOutUpBig"
-        :duration="400"
-      >
-        <div class="content">
-          <template v-for="nav in navs" :key="nav.value">
-            <slot v-if="showExpand && currentNav.value === nav.value" :name="nav.value" :data="nav" />
-          </template>
-        </div>
-      </transition>
+      <div class="expand" :class="{ up: !showExpand, down: showExpand }">
+        <template v-for="nav in navs" :key="nav.value">
+          <slot name="expand" :data="nav">
+            <slot v-if="currentNav?.value === nav.value" :name="nav.value" :data="nav" />
+          </slot>
+        </template>
+      </div>
     </nav>
   </div>
 </template>
 
 <style scoped lang="scss">
-$navsHeight: 40px;
+$maxHeight: 40px;
+$navSpace: 0;
 $navWidth: 120px;
+$navWidthActive: 100px;
+$navOffsetX: ($navWidth - $navWidthActive) / 2 + $navSpace;
 $navNum: 20;
-$backgroundColor: rgba(250, 0, 146, 0.72);
 
-.container{
-  position: relative;
+.nav-container{
   z-index: 99;
+  max-height: $maxHeight;
   nav {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: $navsHeight;
-    background: $backgroundColor;
-
-    .title {
-      margin-right: 18px;
-    }
+    height: 100%;
 
     ul, li {
       margin: 0;
@@ -99,49 +90,58 @@ $backgroundColor: rgba(250, 0, 146, 0.72);
       display: flex;
       position: relative;
       z-index: 1;
-      height: $navsHeight;
+      height: 100%;
 
       li {
         list-style: none;
         width: $navWidth;
-        line-height: $navsHeight;
+        height: 100%;
+        line-height: inherit;
         text-align: center;
+        margin-left: $navSpace;
 
         a {
-          color: white;
           text-decoration: none;
         }
 
         @for $i from 1 to $navNum + 1 {
           &:nth-child(#{$i}):hover ~ .slider,
           &:nth-child(#{$i}).current ~ .slider {
-            left: $navWidth * ($i - 1) + 10px;
+            left: ($navWidth + $navSpace) * ($i - 1) + $navOffsetX;
           }
         }
       }
 
       .slider {
-        width: 100px;
-        height: $navsHeight;
-        background-color: darken($backgroundColor, 1%);
+        width: $navWidthActive;
+        height: 100%;
+        background-color: #d1dbe570;
         border-radius: 4px;
         position: absolute;
-        left: 10px;
+        left: $navOffsetX;
         bottom: 0;
         z-index: -1;
         transition: all ease 0.4s;
       }
     }
 
-    .content {
+    .expand {
+      max-height: 0;
+      transition: max-height 0.4s linear;
       position: absolute;
-      top: $navsHeight;
-      width: 100%;
-      z-index: -1;
+      top: $maxHeight;
+      left: 0;
       box-shadow: 0 5px 10px -5px #bfcbd9;
-      border-radius: 0 0 10px 10px;
+      border-radius: 0 0 6px 6px;
+      width: 100vw;
+      z-index: -1;
       color: #5a5a5a;
       background: rgba(256, 256, 256, 0.85);
+      overflow: hidden;
+
+      &.down {
+        max-height: 40vh;
+      }
     }
   }
 }
