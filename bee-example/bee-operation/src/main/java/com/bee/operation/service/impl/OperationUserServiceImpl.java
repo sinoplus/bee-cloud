@@ -22,7 +22,6 @@ import java.util.Map;
 /**
  * 会员信息Service业务层处理
  *
- * @author chenweigen
  * @date 2023-05-27
  */
 @RequiredArgsConstructor

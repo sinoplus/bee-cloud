@@ -11,7 +11,6 @@ import java.util.List;
 /**
  * 会员信息Service接口
  *
- * @author chenweigen
  * @date 2023-05-27
  */
 public interface IOperationUserService {

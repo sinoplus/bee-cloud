@@ -12,11 +12,15 @@ const props = defineProps({
     type: Array<NavbarProps>,
     required: true,
   },
+  height: {
+    type: String,
+    default: '40px',
+  },
 })
 
 const emit = defineEmits(['change'])
 
-const { items: navs } = toRefs(props)
+const { items: navs, height } = toRefs(props)
 
 const isShow = ref<boolean>(false)
 const hoverPath = ref<string>('') // 悬浮中的元素
@@ -65,16 +69,16 @@ function handleChange(item: NavbarProps) {
 </template>
 
 <style scoped lang="scss">
-$maxHeight: 40px;
+$height: v-bind(height);
 $navSpace: 0;
 $navWidth: 120px;
 $navWidthActive: 100px;
-$navOffsetX: ($navWidth - $navWidthActive) / 2 + $navSpace;
+$navOffsetX: calc(($navWidth - $navWidthActive) / 2) + $navSpace;
 $navNum: 20;
 
 .nav-container{
   z-index: 99;
-  max-height: $maxHeight;
+  height: $height;
   nav {
     display: flex;
     justify-content: center;
@@ -129,10 +133,10 @@ $navNum: 20;
       max-height: 0;
       transition: max-height 0.4s linear;
       position: absolute;
-      top: $maxHeight;
+      top: $height;
       left: 0;
       box-shadow: 0 5px 10px -5px #bfcbd9;
-      border-radius: 0 0 6px 6px;
+      border-radius: 0 0 5px 5px;
       width: 100vw;
       z-index: -1;
       color: #5a5a5a;

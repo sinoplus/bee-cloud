@@ -29,6 +29,7 @@ const navs = ref<any[]>([
     label: '团购',
   },
 ])
+const navHeight = ref('40px')
 </script>
 
 <template>
@@ -38,7 +39,7 @@ const navs = ref<any[]>([
       <header>
         <div class="navbar">
           <span class="title">全部商品分类</span>
-          <Navbar :items="navs" @change="nav => console.log(nav)">
+          <Navbar :height="navHeight" :items="navs" @change="nav => console.log(nav)">
             <template v-for="nav in navs" :key="nav.value" #[nav.value]>
               <div class="expand">
                 {{ nav.label }}
@@ -57,7 +58,7 @@ const navs = ref<any[]>([
 
 <style scoped lang="scss">
 $backgroundColor: rgba(250, 0, 146, 0.72);
-$navsHeight: 40px;
+$navsHeight: v-bind(navHeight);
 .container{
   width: 100%;
   color: white;
@@ -105,6 +106,7 @@ $navsHeight: 40px;
       width: 100vw;
       top: 0;
       left: 0;
+      height: 440px;
     }
   }
 }

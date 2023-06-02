@@ -12,7 +12,6 @@ import java.util.Date;
 /**
  * 会员信息对象 operation_user
  *
- * @author chenweigen
  * @date 2023-05-27
  */
 @Data

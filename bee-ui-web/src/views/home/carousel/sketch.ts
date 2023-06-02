@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import gsap, { Power2 } from 'gsap'
-import disp1 from './imgs/disp1.jpg'
+import defaultImg from './imgs/default.jpeg'
 
 export class Sketch {
   private scene = new THREE.Scene()
@@ -11,19 +11,19 @@ export class Sketch {
   private textures: THREE.Texture[] = []
   private paused = true
 
-  private container
-  private camera
+  private container: HTMLElement
+  private readonly camera
   private material: any
   private geometry: any
   private plane: any
   private clicker
   private width
   private height
-  private duration
-  private fragment
+  private readonly duration
+  private readonly fragment
   private uniforms
   private debug
-  private easing
+  private readonly easing
   private images
   private settings: any
 
@@ -103,7 +103,11 @@ export class Sketch {
   }
 
   private setupResize = () => {
-    window.addEventListener('resize', this.resize.bind(this))
+    window.addEventListener('resize', () => this.resize())
+  }
+
+  private clickEvent = () => {
+    this.clicker?.addEventListener('click', this.next)
   }
 
   private addObjects = () => {
@@ -125,7 +129,7 @@ export class Sketch {
         radius: { type: 'f', value: 0 } as THREE.IUniform,
         texture1: { type: 'f', value: this.textures[0] } as THREE.IUniform,
         texture2: { type: 'f', value: this.textures[1] } as THREE.IUniform,
-        displacement: { type: 'f', value: new THREE.TextureLoader().load(disp1) } as THREE.IUniform,
+        displacement: { type: 'f', value: new THREE.TextureLoader().load(defaultImg) } as THREE.IUniform,
         resolution: { type: 'v4', value: new THREE.Vector4() } as THREE.IUniform,
       },
       // wireframe: true,
@@ -139,12 +143,6 @@ export class Sketch {
     this.scene.add(this.plane)
   }
 
-  private clickEvent = () => {
-    this.clicker?.addEventListener('click', () => {
-      this.next()
-    })
-  }
-
   private setSettings = () => {
     this.settings = { progress: 0.5 }
     Object.keys(this.uniforms).forEach((item) => {
@@ -152,29 +150,31 @@ export class Sketch {
     })
   }
 
-  private stop() {
+  public stop() {
     this.paused = true
   }
 
-  private play() {
+  public play() {
     this.paused = false
     this.render()
   }
 
   private isRunning = false
-  private next = () => {
+  public next = (current = this.current) => {
     if (this.isRunning)
       return
     this.isRunning = true
+    this.play()
     const len = this.textures.length
-    const nextTexture = this.textures[(this.current + 1) % len]
+    const idx = (current + 1) % len
+    const nextTexture = this.textures[idx]
     this.material.uniforms.texture2.value = nextTexture
     const tl = gsap.timeline()
     tl.to(this.material.uniforms.progress, this.duration, {
       value: 1,
       ease: (Power2 as any)[this.easing],
       onComplete: () => {
-        this.current = (this.current + 1) % len
+        this.current = idx
         this.material.uniforms.texture1.value = nextTexture
         this.material.uniforms.progress.value = 0
         this.isRunning = false
@@ -182,7 +182,13 @@ export class Sketch {
     })
   }
 
-  private render() {
+  public destroy() {
+    window.removeEventListener('resize', this.resize)
+    this.clicker?.removeEventListener('click', () => this.next())
+    this.container?.removeChild(this.renderer.domElement)
+  }
+
+  private render = () => {
     if (this.paused)
       return
     this.time += 0.05
@@ -192,7 +198,7 @@ export class Sketch {
       this.material.uniforms[item].value = this.settings[item]
     })
 
-    requestAnimationFrame(this.render.bind(this))
+    requestAnimationFrame(this.render)
     this.renderer.render(this.scene, this.camera)
   }
 }

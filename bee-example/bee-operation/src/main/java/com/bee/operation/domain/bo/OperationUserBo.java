@@ -13,7 +13,6 @@ import java.util.Date;
 /**
  * 会员信息业务对象
  *
- * @author chenweigen
  * @date 2023-05-27
  */
 
