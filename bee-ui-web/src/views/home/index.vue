@@ -1,6 +1,12 @@
 <script setup name="Home" lang="ts">
 import { ref } from 'vue'
-import Carousel from './carousel'
+
+import img1 from './imgs/img1.jpeg'
+import img2 from './imgs/img2.jpeg'
+import img3 from './imgs/img3.jpeg'
+import img4 from './imgs/img4.jpeg'
+
+import Carousel from '@/components/Carousel'
 import Navbar from '@/components/Navbar'
 
 const navs = ref<any[]>([
@@ -49,7 +55,7 @@ const navHeight = ref('40px')
           <span class="call">24小时服务热线：400-000-0000</span>
         </div>
         <div class="carousel">
-          <Carousel />
+          <Carousel :images="[img1, img2, img3, img4]" />
         </div>
       </header>
     </div>

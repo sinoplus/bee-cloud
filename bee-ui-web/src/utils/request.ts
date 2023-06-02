@@ -11,7 +11,6 @@ import { getToken } from '@/utils/auth'
 import errorCode from '@/utils/errorCode'
 import { blobValidate, tansParams } from '@/utils/tools'
 import cache from '@/plugins/cache'
-import useUserStore from '@/store/modules/user'
 
 let downloadLoadingInstance: { close: () => void }
 // 是否显示重新登录
@@ -86,7 +85,6 @@ service.interceptors.request.use(
     return config
   },
   (error) => {
-    console.log(error)
     Promise.reject(error)
   },
 )
@@ -120,17 +118,12 @@ service.interceptors.response.use(
         )
           .then(() => {
             isRelogin.show = false
-            useUserStore()
-              .logOut()
-              .then(() => {
-                location.href = '/index'
-              })
           })
           .catch(() => {
             isRelogin.show = false
           })
       }
-      return Promise.reject('无效的会话，或者会话已过期，请重新登录。')
+      return Promise.reject(new Error('无效的会话，或者会话已过期，请重新登录。'))
     }
     else if (otherCode === 500) {
       ElMessage({
@@ -148,16 +141,15 @@ service.interceptors.response.use(
     }
     else if (otherCode !== 200) {
       ElNotification.error({ title: msg })
-      return Promise.reject('error')
+      return Promise.reject(new Error('error'))
     }
     else {
       return Promise.resolve(res.data)
     }
   },
   (error) => {
-    console.log(`err${error}`)
     let { message } = error
-    if (message == 'Network Error')
+    if (message === 'Network Error')
       message = '后端接口连接异常'
     else if (message.includes('timeout'))
       message = '系统接口请求超时'

@@ -29,7 +29,7 @@ export function hexToRgb(str: any) {
 export function rgbToHex(r: number, g: number, b: number) {
   const hexs = [r.toString(16), g.toString(16), b.toString(16)]
   for (let i = 0; i < 3; i++) {
-    if (hexs[i].length == 1)
+    if (hexs[i].length === 1)
       hexs[i] = `0${hexs[i]}`
   }
   return `#${hexs.join('')}`

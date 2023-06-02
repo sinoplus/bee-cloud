@@ -1,5 +1,5 @@
 <script setup name="Home" lang="ts">
-import { computed, ref, toRefs } from 'vue'
+import { computed, ref, toRefs, useCssModule } from 'vue'
 
 interface NavbarProps {
   label: string
@@ -21,6 +21,7 @@ const props = defineProps({
 const emit = defineEmits(['change'])
 
 const { items: navs, height } = toRefs(props)
+const styles = useCssModule()
 
 const isShow = ref<boolean>(false)
 const hoverPath = ref<string>('') // 悬浮中的元素
@@ -49,15 +50,15 @@ function handleChange(item: NavbarProps) {
 </script>
 
 <template>
-  <div class="nav-container">
-    <nav class="navs" @mouseleave.stop="mouseleave">
+  <div :class="styles.container">
+    <nav :class="styles.navs" @mouseleave.stop="mouseleave">
       <ul @mousemove.stop="mouseleave">
-        <li v-for="nav in navs" :key="nav.value" :class="{ current: currentValue === nav.value }" @click="handleChange(nav)" @mouseenter.stop="mouseover(nav.value)" @mousemove.stop>
+        <li v-for="nav in navs" :key="nav.value" :class="{ [styles.current]: currentValue === nav.value }" @click="handleChange(nav)" @mouseenter.stop="mouseover(nav.value)" @mousemove.stop>
           <a href="#">{{ nav.label }}</a>
         </li>
-        <div class="slider" />
+        <li :class="styles.slider" />
       </ul>
-      <div class="expand" :class="{ up: !showExpand, down: showExpand }">
+      <div :class="[styles.expand, !showExpand ? styles.up : styles.down]">
         <template v-for="nav in navs" :key="nav.value">
           <slot name="expand" :data="nav">
             <slot v-if="currentNav?.value === nav.value" :name="nav.value" :data="nav" />
@@ -68,7 +69,7 @@ function handleChange(item: NavbarProps) {
   </div>
 </template>
 
-<style scoped lang="scss">
+<style module lang="scss">
 $height: v-bind(height);
 $navSpace: 0;
 $navWidth: 120px;
@@ -76,7 +77,7 @@ $navWidthActive: 100px;
 $navOffsetX: calc(($navWidth - $navWidthActive) / 2) + $navSpace;
 $navNum: 20;
 
-.nav-container{
+.container {
   z-index: 99;
   height: $height;
   nav {
@@ -125,7 +126,7 @@ $navNum: 20;
         left: $navOffsetX;
         bottom: 0;
         z-index: -1;
-        transition: all ease 0.4s;
+        transition: left ease 0.4s;
       }
     }
 

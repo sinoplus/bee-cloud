@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import gsap, { Power2 } from 'gsap'
-import defaultImg from './imgs/default.jpeg'
+import defaultImg from '@/views/home/imgs/default.jpeg'
 
 export class Sketch {
   private scene = new THREE.Scene()
@@ -16,7 +16,6 @@ export class Sketch {
   private material: any
   private geometry: any
   private plane: any
-  private clicker
   private width
   private height
   private readonly duration
@@ -26,6 +25,7 @@ export class Sketch {
   private readonly easing
   private images
   private settings: any
+  private isRunning = false
 
   constructor(opts: any) {
     this.container = opts.container
@@ -41,7 +41,6 @@ export class Sketch {
     this.duration = opts.duration || 1
     this.debug = opts.debug || false
     this.easing = opts.easing || 'easeInOut'
-    this.clicker = opts.clicker
     this.camera = new THREE.PerspectiveCamera(
       70,
       this.width / this.height,
@@ -54,7 +53,6 @@ export class Sketch {
       this.setSettings()
       this.addObjects()
       this.resize()
-      this.clickEvent()
       this.play()
     })
   }
@@ -106,10 +104,6 @@ export class Sketch {
     window.addEventListener('resize', () => this.resize())
   }
 
-  private clickEvent = () => {
-    this.clicker?.addEventListener('click', this.next)
-  }
-
   private addObjects = () => {
     this.material = new THREE.ShaderMaterial({
       extensions: {
@@ -127,12 +121,11 @@ export class Sketch {
         swipe: { type: 'f', value: 0 } as THREE.IUniform,
         width: { type: 'f', value: 0 } as THREE.IUniform,
         radius: { type: 'f', value: 0 } as THREE.IUniform,
-        texture1: { type: 'f', value: this.textures[0] } as THREE.IUniform,
-        texture2: { type: 'f', value: this.textures[1] } as THREE.IUniform,
+        textureFrom: { type: 'f', value: this.textures[0] } as THREE.IUniform,
+        textureTo: { type: 'f', value: this.textures[1] } as THREE.IUniform,
         displacement: { type: 'f', value: new THREE.TextureLoader().load(defaultImg) } as THREE.IUniform,
         resolution: { type: 'v4', value: new THREE.Vector4() } as THREE.IUniform,
       },
-      // wireframe: true,
       vertexShader: this.vertex,
       fragmentShader: this.fragment,
     })
@@ -159,37 +152,64 @@ export class Sketch {
     this.render()
   }
 
-  private isRunning = false
-  public next = (current = this.current) => {
-    if (this.isRunning)
-      return
-    this.isRunning = true
-    this.play()
-    const len = this.textures.length
-    const idx = (current + 1) % len
-    const nextTexture = this.textures[idx]
-    this.material.uniforms.texture2.value = nextTexture
-    const tl = gsap.timeline()
-    tl.to(this.material.uniforms.progress, this.duration, {
-      value: 1,
-      ease: (Power2 as any)[this.easing],
-      onComplete: () => {
-        this.current = idx
-        this.material.uniforms.texture1.value = nextTexture
-        this.material.uniforms.progress.value = 0
-        this.isRunning = false
-      },
+  public next = async () => {
+    return this.jumpTo(this.current + 1)
+  }
+
+  public prev = async () => {
+    return this.jumpTo(this.current - 1)
+  }
+
+  public jumpTo = async (index: number): Promise<number> => {
+    return new Promise((resolve, reject) => {
+      if (this.isRunning)
+        return reject(new Error('isRunning'))
+      this.isRunning = true
+      this.play()
+      const tl = gsap.timeline()
+      const len = this.textures.length
+      const idx = (index + len) % len
+      const nextTexture = this.textures[idx]
+      if (index < this.current) {
+        this.material.uniforms.textureTo.value = this.textures[this.current]
+        this.material.uniforms.textureFrom.value = nextTexture
+        tl.from(this.material.uniforms.progress, this.duration, {
+          value: 1,
+          ease: (Power2 as any)[this.easing],
+          onComplete: () => {
+            this.current = idx
+            this.material.uniforms.textureTo.value = nextTexture
+            this.material.uniforms.progress.value = 0
+            this.isRunning = false
+            resolve(idx)
+          },
+        })
+      }
+      else {
+        this.material.uniforms.textureFrom.value = this.textures[this.current]
+        this.material.uniforms.textureTo.value = nextTexture
+        tl.to(this.material.uniforms.progress, this.duration, {
+          value: 1,
+          ease: (Power2 as any)[this.easing],
+          onComplete: () => {
+            this.current = idx
+            this.material.uniforms.textureFrom.value = nextTexture
+            this.material.uniforms.progress.value = 0
+            this.isRunning = false
+            resolve(idx)
+          },
+        })
+      }
     })
   }
 
   public destroy() {
     window.removeEventListener('resize', this.resize)
-    this.clicker?.removeEventListener('click', () => this.next())
     this.container?.removeChild(this.renderer.domElement)
   }
 
   private render = () => {
-    if (this.paused)
+    if (this.paused && !this.isRunning)
       return
     this.time += 0.05
     this.material.uniforms.time.value = this.time

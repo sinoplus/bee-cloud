@@ -22,7 +22,6 @@ const useUserStore = defineStore('user', {
       return new Promise<void>((resolve, reject) => {
         login(username, password, code, uuid)
           .then((res) => {
-            console.log(res, 90900)
             const data = res.data
             setToken(data.access_token)
             this.token = data.access_token
@@ -40,7 +39,7 @@ const useUserStore = defineStore('user', {
           .then((res: any) => {
             const user = res.data?.user
             const avatar
-              = user.avatar == '' || user.avatar == null ? defAva : user.avatar
+              = (user.avatar === '' || user.avatar == null) ? defAva : user.avatar
 
             if (res.data?.roles?.length > 0) {
               // 验证返回的roles是否是一个非空数组

@@ -4,7 +4,7 @@ import { parseTime } from './tools'
  * 表格时间格式化
  */
 export function formatDate(cellValue: string | number | Date) {
-  if (cellValue == null || cellValue == '')
+  if (cellValue == null || cellValue === '')
     return ''
   const date = new Date(cellValue)
   const year = date.getFullYear()
