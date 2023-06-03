@@ -69,10 +69,9 @@ function handleChange(item: INavbarItemProps) {
 
 <style module lang="scss">
 $height: v-bind(height);
-$navInterval: 0;
 $navWidth: 120px;
 $navWidthActive: 100px;
-$navOffsetX: calc(($navWidth - $navWidthActive) / 2) + $navInterval;
+$navOffsetX: calc(($navWidth - $navWidthActive) / 2);
 $navNum: 20;
 
 .container {
@@ -98,7 +97,6 @@ $navNum: 20;
         height: 100%;
         line-height: inherit;
         text-align: center;
-        margin: 0 $navInterval;
 
         a {
           text-decoration: none;
@@ -107,7 +105,7 @@ $navNum: 20;
         @for $i from 1 to $navNum + 1 {
           &:nth-child(#{$i}):hover ~ .slider,
           &:nth-child(#{$i}).current ~ .slider {
-            left: ($navWidth + $navInterval) * ($i - 1) + $navOffsetX;
+            left: $navWidth * ($i - 1) + $navOffsetX;
           }
         }
       }

@@ -20,50 +20,50 @@ const { images, sketchType, autoplay, intervals } = toRefs(props)
 const carouselRef = ref<HTMLElement>()
 const styles = useCssModule()
 const sketch = ref<Sketch>()
-const timer = ref<number>()
+const frame = ref<number>(0)
+const switching = ref<boolean>(false)
 const currentIdx = ref<number>(0) // 当前轮播图索引
 const bulletIndex = ref<number>(0) // 跳转目标轮播图
-const isStop = ref<boolean>(false)
 const duration = ref<string>('1.5s')
 
+const durationValue = computed(() => +String(duration.value).replace(/[^\d.-]/g, ''))
 const sketchFactory = computed(() => createSketch(sketchType.value))
 const activeIndex = computed(() => {
   const index = bulletIndex.value % images.value.length
   return index < 0 ? index + images.value.length : index
 })
 
-function handleStop() {
-  isStop.value = true
-  clearTimeout(timer.value!)
-  timer.value = undefined
+function stop() {
+  cancelAnimationFrame(frame.value)
 }
 
-function handleStart() {
-  isStop.value = false
-  handleAutoplay()
+function start() {
+  if (autoplay.value)
+    frame.value = requestAnimationFrame(handleAutoplay)
 }
 
-function handleAutoplay() {
-  if (autoplay.value && !timer.value && !isStop.value) {
-    timer.value = setTimeout(() => {
-      jumpTo(currentIdx.value + 1)
-    }, intervals.value)
+let lastTime = 0
+function handleAutoplay(timestamp: number) {
+  if (lastTime + intervals.value < timestamp) {
+    lastTime = timestamp
+    jumpTo(currentIdx.value + 1)
   }
+  else if (switching.value) {
+    lastTime = timestamp
+  }
+  frame.value = requestAnimationFrame(handleAutoplay)
 }
 
 async function jumpTo(index) {
-  if (index === currentIdx.value || isStop.value)
+  if (index === currentIdx.value || switching.value)
     return
+  switching.value = true
   bulletIndex.value = index
-  handleStop()
-  bulletIndex.value = currentIdx.value = await sketch.value?.jumpTo(index).finally(() => {
-    handleStart()
-  })
+  bulletIndex.value = currentIdx.value = await sketch.value?.jumpTo(index).finally(() => switching.value = false)
 }
 
 function handleUnmount() {
   sketch.value?.destroy?.()
-  handleStop()
 }
 
 function render(props: ISketchProps) {
@@ -76,7 +76,7 @@ function init() {
     sketch.value = render({
       images: images?.value ?? [],
       container: carouselRef.value!,
-      duration: +String(duration.value).replace(/[^\d.-]/g, ''),
+      duration: durationValue.value,
     })
   }
 }
@@ -85,13 +85,13 @@ onBeforeUnmount(handleUnmount)
 
 nextTick(() => {
   init()
-  handleStart()
+  start()
 })
 </script>
 
 <template>
   <div :class="styles.container">
-    <div ref="carouselRef" :class="styles.carousel" @mouseover="handleStop" @mouseout="handleStart" />
+    <div ref="carouselRef" :class="styles.carousel" @mouseover.stop="stop" @mouseout.stop="start" />
     <nav v-if="sketch" :class="styles.pagination">
       <ul>
         <li v-for="(_, i) in images" :key="i" :class="{ [styles.active]: i === activeIndex }" @click="jumpTo(i)" />
@@ -114,13 +114,13 @@ $duration: v-bind(duration);
 
   .carousel {
     height: 100%;
+    cursor: pointer;
   }
 
   nav.pagination {
-    position: absolute;
-    bottom: 4px;
     width: 100%;
     text-align: center;
+    height: 0;
 
     ul, li {
       margin: 0;
@@ -132,6 +132,7 @@ $duration: v-bind(duration);
       justify-content: center;
       align-items: center;
       position: relative;
+      bottom: 24px;
 
       li {
         list-style: none;
@@ -159,6 +160,7 @@ $duration: v-bind(duration);
               content: '#{$i}';
               position: absolute;
               left: calc($bullet-size / 2);
+              line-height: 12px;
             }
           }
         }

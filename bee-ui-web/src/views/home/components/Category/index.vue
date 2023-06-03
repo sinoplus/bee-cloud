@@ -1,67 +1,35 @@
 <script setup lang="ts">
 import { toRefs, useCssModule } from 'vue'
 
-interface IMenuProps {
-  title: string
+export interface ICateProps {
+  value: string | number
+  label: string
+  hasPop?: boolean
+  cateList: Omit<ICateProps, 'hasPop' | 'cateList'>[]
 }
 
-const props = withDefaults<IMenuProps>(defineProps<IMenuProps>(), {})
-const { title } = toRefs(props)
+interface ICategoryProps {
+  name: string
+  items: ICateProps[]
+}
+
+const props = withDefaults<ICategoryProps>(defineProps<ICategoryProps>(), {})
+const { name, items } = toRefs<ICategoryProps>(props)
 const styles = useCssModule()
 </script>
 
 <template>
   <div :class="styles.container">
     <div :class="styles.title">
-      {{ title }}
+      {{ name }}
     </div>
     <div :class="styles.body">
       <nav>
         <ul :class="styles.cate">
-          <li :class="styles.item">
-            <a :class="styles['item-title']">鲜花用途</a>
+          <li v-for="item in items" :key="item.value" :class="styles.item">
+            <a :class="styles['cate-label']">{{ item.label }}</a>
             <div :class="styles['cate-list']">
-              <a>送朋友</a>
-              <a>送家人</a>
-              <a>送爱人</a>
-              <a>送朋友</a>
-              <a>送家人</a>
-              <a>送爱人</a>
-              <a>送朋友</a>
-              <a>送家人</a>
-              <a>送爱人</a>
-            </div>
-          </li>
-          <li :class="styles.item">
-            <a :class="styles['item-title']">鲜花用途</a>
-            <div :class="styles['cate-list']">
-              <a>送朋友</a>
-              <a>送家人</a>
-              <a>送爱人</a>
-            </div>
-          </li>
-          <li :class="styles.item">
-            <a :class="styles['item-title']">鲜花用途</a>
-            <div :class="styles['cate-list']">
-              <a>送朋友</a>
-              <a>送家人</a>
-              <a>送爱人</a>
-            </div>
-          </li>
-          <li :class="styles.item">
-            <a :class="styles['item-title']">鲜花用途</a>
-            <div :class="styles['cate-list']">
-              <a>送朋友</a>
-              <a>送家人</a>
-              <a>送爱人</a>
-            </div>
-          </li>
-          <li :class="styles.item">
-            <a :class="styles['item-title']">鲜花用途</a>
-            <div :class="styles['cate-list']">
-              <a>送朋友</a>
-              <a>送家人</a>
-              <a>送爱人</a>
+              <a v-for="cate in item.cateList" :key="cate.value">{{ cate.label }}</a>
             </div>
           </li>
         </ul>
@@ -74,12 +42,12 @@ const styles = useCssModule()
 .container {
   position: relative;
   width: 240px;
-  border-radius: 12px 12px 0 0;
+  border-radius: 12px 12px 6px 6px;
   min-height: 440px;
-  background-color: #546c9dc2;
+  background-color: rgb(59 74 104 / 61%);
   .title {
     border-radius: 12px 12px 0 0;
-    background-color: #8f56b4;
+    background-color: #6c5c81;
     text-align: center;
   }
   .body {
@@ -90,12 +58,13 @@ const styles = useCssModule()
       }
 
       ul.cate {
+        line-height: 24px;
         li.item {
           list-style: none;
           padding: 9px 0 9px 20px;
           border-bottom: 1px dashed rgba(255,255,255,0.2);
 
-          .item-title {
+          .cate-label {
             margin-top: 2px;
             padding-left: 4px;
             padding-right: 28px;

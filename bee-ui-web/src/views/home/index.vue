@@ -6,6 +6,7 @@ import img2 from './imgs/img2.jpeg'
 import img3 from './imgs/img3.jpeg'
 import img4 from './imgs/img4.jpeg'
 import Category from './components/Category'
+import type { ICateProps } from '@/views/home/components/Category/index.vue'
 import Carousel from '@/components/Carousel'
 import Navbar from '@/components/Navbar'
 
@@ -35,6 +36,130 @@ const navs = ref<any[]>([
     label: '团购',
   },
 ])
+
+const cateItems = ref<ICateProps[]>([
+  {
+    value: 0,
+    label: '鲜花用途',
+    cateList: [
+      {
+        value: 0,
+        label: '爱情鲜花',
+      },
+      {
+        value: 1,
+        label: '生日鲜花',
+      },
+      {
+        value: 2,
+        label: '友情鲜花',
+      },
+      {
+        value: 3,
+        label: '问候长辈',
+      },
+      {
+        value: 4,
+        label: '探病慰问',
+      },
+      {
+        value: 5,
+        label: '道歉鲜花',
+      },
+      {
+        value: 6,
+        label: '祝贺鲜花',
+      },
+      {
+        value: 7,
+        label: '婚庆鲜花',
+      },
+      {
+        value: 8,
+        label: '商务鲜花',
+      },
+    ],
+  },
+  {
+    value: 1,
+    label: '鲜花花材',
+    cateList: [
+      {
+        value: 0,
+        label: '玫瑰',
+      },
+      {
+        value: 1,
+        label: '康乃馨',
+      },
+      {
+        value: 2,
+        label: '向日葵',
+      },
+      {
+        value: 3,
+        label: '扶郎',
+      },
+      {
+        value: 4,
+        label: '郁金香',
+      },
+      {
+        value: 5,
+        label: '马蹄莲',
+      },
+    ],
+  },
+  {
+    value: 2,
+    label: '永生花',
+    cateList: [
+      {
+        value: 0,
+        label: '永生瓶花',
+      },
+      {
+        value: 1,
+        label: '经典花盒',
+      },
+      {
+        value: 2,
+        label: '特色永生花',
+      },
+    ],
+  },
+  {
+    value: 3,
+    label: '蛋糕',
+    cateList: [
+      {
+        value: 0,
+        label: '元祖',
+      },
+      {
+        value: 1,
+        label: '幸福西饼',
+      },
+      {
+        value: 2,
+        label: '21cake',
+      },
+      {
+        value: 3,
+        label: '诺心蛋糕',
+      },
+      {
+        value: 4,
+        label: '窝夫小子',
+      },
+      {
+        value: 5,
+        label: 'BONCAKE',
+      },
+    ],
+  },
+])
+
 const navHeight = ref<string>('40px')
 const bannerImages = ref<string[]>([img1, img2, img3, img4])
 
@@ -47,7 +172,7 @@ const styles = useCssModule()
       <div :class="styles.navi">
         <div :class="styles['navi-container']">
           <div :class="styles.category">
-            <Category title="全部商品分类" />
+            <Category name="全部商品分类" :items="cateItems" />
           </div>
           <Navbar :height="navHeight" :items="navs" @change="nav => console.log(nav)">
             <template v-for="nav in navs" :key="nav.value" #[nav.value]>
@@ -91,7 +216,7 @@ $navsHeight: v-bind(navHeight);
       z-index: 1;
 
       .navi-container {
-        width: 1200px;
+        width: 1300px;
         height: 100%;
         margin: 0 auto;
       }
