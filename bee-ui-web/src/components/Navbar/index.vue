@@ -1,26 +1,24 @@
 <script setup name="Home" lang="ts">
 import { computed, ref, toRefs, useCssModule } from 'vue'
 
-interface NavbarProps {
+interface INavbarItemProps {
   label: string
   value: string
   showExpand?: boolean
 }
 
-const props = defineProps({
-  items: {
-    type: Array<NavbarProps>,
-    required: true,
-  },
-  height: {
-    type: String,
-    default: '40px',
-  },
+interface INavbarProps {
+  items: INavbarItemProps[]
+  height?: string
+}
+
+const props = withDefaults<INavbarProps>(defineProps<INavbarProps>(), {
+  height: '40px',
 })
 
 const emit = defineEmits(['change'])
-
 const { items: navs, height } = toRefs(props)
+
 const styles = useCssModule()
 
 const isShow = ref<boolean>(false)
@@ -43,7 +41,7 @@ function mouseleave() {
   hoverPath.value = ''
 }
 
-function handleChange(item: NavbarProps) {
+function handleChange(item: INavbarItemProps) {
   activeValue.value = item.value
   emit('change', item)
 }
@@ -71,19 +69,16 @@ function handleChange(item: NavbarProps) {
 
 <style module lang="scss">
 $height: v-bind(height);
-$navSpace: 0;
+$navInterval: 0;
 $navWidth: 120px;
 $navWidthActive: 100px;
-$navOffsetX: calc(($navWidth - $navWidthActive) / 2) + $navSpace;
+$navOffsetX: calc(($navWidth - $navWidthActive) / 2) + $navInterval;
 $navNum: 20;
 
 .container {
   z-index: 99;
   height: $height;
   nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100%;
 
     ul, li {
@@ -92,10 +87,10 @@ $navNum: 20;
     }
 
     ul {
-      display: flex;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
       position: relative;
-      z-index: 1;
-      height: 100%;
 
       li {
         list-style: none;
@@ -103,7 +98,7 @@ $navNum: 20;
         height: 100%;
         line-height: inherit;
         text-align: center;
-        margin-left: $navSpace;
+        margin: 0 $navInterval;
 
         a {
           text-decoration: none;
@@ -112,20 +107,20 @@ $navNum: 20;
         @for $i from 1 to $navNum + 1 {
           &:nth-child(#{$i}):hover ~ .slider,
           &:nth-child(#{$i}).current ~ .slider {
-            left: ($navWidth + $navSpace) * ($i - 1) + $navOffsetX;
+            left: ($navWidth + $navInterval) * ($i - 1) + $navOffsetX;
           }
         }
       }
 
       .slider {
+        position: absolute;
+        bottom: 0;
+        left: $navOffsetX;
         width: $navWidthActive;
         height: 100%;
-        background-color: #d1dbe570;
-        border-radius: 4px;
-        position: absolute;
-        left: $navOffsetX;
-        bottom: 0;
         z-index: -1;
+        border-radius: 4px;
+        background-color: #d1dbe570;
         transition: left ease 0.4s;
       }
     }
@@ -139,7 +134,7 @@ $navNum: 20;
       box-shadow: 0 5px 10px -5px #bfcbd9;
       border-radius: 0 0 5px 5px;
       width: 100vw;
-      z-index: -1;
+      z-index: 99;
       color: #5a5a5a;
       background: rgba(256, 256, 256, 0.85);
       overflow: hidden;

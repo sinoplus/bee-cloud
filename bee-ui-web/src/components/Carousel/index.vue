@@ -76,7 +76,7 @@ function init() {
     sketch.value = render({
       images: images?.value ?? [],
       container: carouselRef.value!,
-      duration: +duration.value.replace(/[^\d.-]/g, ''),
+      duration: +String(duration.value).replace(/[^\d.-]/g, ''),
     })
   }
 }
@@ -92,12 +92,10 @@ nextTick(() => {
 <template>
   <div :class="styles.container">
     <div ref="carouselRef" :class="styles.carousel" @mouseover="handleStop" @mouseout="handleStart" />
-    <nav :class="styles.pagination">
+    <nav v-if="sketch" :class="styles.pagination">
       <ul>
         <li v-for="(_, i) in images" :key="i" :class="{ [styles.active]: i === activeIndex }" @click="jumpTo(i)" />
-        <li :class="styles.slider">
-          {{ activeIndex + 1 }}
-        </li>
+        <li :class="styles.slider" />
       </ul>
     </nav>
   </div>
@@ -106,7 +104,7 @@ nextTick(() => {
 <style module lang="scss">
 $bullet-bg: #1a1a1a;
 $bullet-bg-active: rgba(250, 0, 146, 0.72);
-$bullet-size: 8px;
+$bullet-size: 7px;
 $bullet-interval: 6px;
 $duration: v-bind(duration);
 
@@ -118,38 +116,35 @@ $duration: v-bind(duration);
     height: 100%;
   }
 
-  .pagination {
+  nav.pagination {
     position: absolute;
-    bottom: 5px;
-    left: 0;
+    bottom: 4px;
     width: 100%;
     text-align: center;
-    transition: .3s opacity;
-    transform: translate3d(0, 0, 0);
-    z-index: 10;
 
     ul, li {
       margin: 0;
       padding: 0;
-      margin-block-start: 0;
-      margin-block-end: 0;
     }
+
     ul {
-      position: relative;
       display: inline-flex;
       justify-content: center;
       align-items: center;
-      z-index: 1;
+      position: relative;
+
       li {
         list-style: none;
-        margin: 0 $bullet-interval;
-        cursor: pointer;
         width: $bullet-size;
         height: $bullet-size;
         border-radius: 50%;
         line-height: $bullet-size;
+        text-align: center;
         font-size: 12px;
+        position: relative;
+        margin: 0 $bullet-interval;
         background-color: $bullet-bg;
+        cursor: pointer;
         opacity: .3;
         transition: opacity ease $duration;
 
@@ -160,6 +155,11 @@ $duration: v-bind(duration);
         @for $i from 1 to 20 {
           &:nth-child(#{$i}).active ~ .slider {
             left: calc(($bullet-interval * 2 + $bullet-size) * ($i - 1) - $bullet-size / 2);
+            &:before {
+              content: '#{$i}';
+              position: absolute;
+              left: calc($bullet-size / 2);
+            }
           }
         }
       }
@@ -167,12 +167,12 @@ $duration: v-bind(duration);
       .slider {
         position: absolute;
         left: - calc($bullet-size / 2);
-        background-color: $bullet-bg-active;
         width: $bullet-size * 2;
         height: $bullet-size * 2;
         line-height: $bullet-size * 2;
+        background-color: $bullet-bg-active;
         opacity: 1;
-        transform: scale(0.8);
+        transform: scale(0.85);
         transition: left ease $duration;
       }
     }

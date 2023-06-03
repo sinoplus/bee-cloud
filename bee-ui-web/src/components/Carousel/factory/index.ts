@@ -9,12 +9,17 @@ export interface ISketchProps {
 export enum SketchType {
   Type1,
   Type2,
+  Type3,
+  Type4,
+  Type5,
 }
 
 function type1(props: ISketchProps) {
   const { images, container, duration = 1.5 } = props
   return new Sketch({
     duration,
+    images,
+    container,
     debug: true,
     easing: 'easeOut',
     uniforms: {
@@ -31,8 +36,6 @@ function type1(props: ISketchProps) {
         max: 1,
       },
     },
-    images,
-    container,
     fragment: `
     uniform float time;
 		uniform float progress;
@@ -78,6 +81,8 @@ function type2(props: ISketchProps) {
   const { images, container, duration = 1.5 } = props
   return new Sketch({
     duration,
+    images,
+    container,
     debug: true,
     easing: 'easeOut',
     uniforms: {
@@ -85,8 +90,6 @@ function type2(props: ISketchProps) {
       scaleX: { value: 40, type: 'f', min: 0.1, max: 60 },
       scaleY: { value: 40, type: 'f', min: 0.1, max: 60 },
     },
-    images,
-    container,
     fragment: `
 		uniform float time;
 		uniform float progress;
@@ -282,10 +285,188 @@ function type2(props: ISketchProps) {
   })
 }
 
+function type3(props: ISketchProps) {
+  const { images, container, duration = 1.5 } = props
+  return new Sketch({
+    duration,
+    images,
+    container,
+    debug: false,
+    easing: 'easeOut',
+    uniforms: {
+      // width: {value: 0.35, type:'f', min:0., max:1},
+    },
+    fragment: `
+		uniform float time;
+		uniform float progress;
+		uniform float width;
+		uniform float scaleX;
+		uniform float scaleY;
+		uniform float transition;
+		uniform float radius;
+		uniform float swipe;
+		uniform sampler2D textureFrom;
+		uniform sampler2D textureTo;
+		uniform sampler2D displacement;
+		uniform vec4 resolution;
+
+		varying vec2 vUv;
+		varying vec4 vPosition;
+		vec2 mirrored(vec2 v) {
+			vec2 m = mod(v,2.);
+			return mix(m,2.0 - m, step(1.0 ,m));
+		}
+
+		void main()	{
+		  vec2 newUV = (vUv - vec2(0.5))*resolution.zw + vec2(0.5);
+		  vec4 noise = texture2D(displacement, mirrored(newUV+time*0.04));
+		  // float prog = 0.6*progress + 0.2 + noise.g * 0.06;
+		  float prog = progress*0.8 -0.05 + noise.g * 0.06;
+		  float intpl = pow(abs(smoothstep(0., 1., (prog*2. - vUv.x + 0.5))), 10.);
+		  
+		  vec4 t1 = texture2D( textureFrom, (newUV - 0.5) * (1.0 - intpl) + 0.5 ) ;
+		  vec4 t2 = texture2D( textureTo, (newUV - 0.5) * intpl + 0.5 );
+		  gl_FragColor = mix( t1, t2, intpl );
+		}
+	`,
+  })
+}
+
+function type4(props: ISketchProps) {
+  const { images, container, duration = 1.5 } = props
+  return new Sketch({
+    duration,
+    images,
+    container,
+    debug: true,
+    uniforms: {
+      intensity: { value: 1, type: 'f', min: 0.0, max: 3 },
+    },
+    fragment: `
+		uniform float time;
+		uniform float progress;
+		uniform float intensity;
+		uniform float width;
+		uniform float scaleX;
+		uniform float scaleY;
+		uniform float transition;
+		uniform float radius;
+		uniform float swipe;
+		uniform sampler2D textureFrom;
+		uniform sampler2D textureTo;
+		uniform sampler2D displacement;
+		uniform vec4 resolution;
+		varying vec2 vUv;
+		mat2 getRotM(float angle) {
+		    float s = sin(angle);
+		    float c = cos(angle);
+		    return mat2(c, -s, s, c);
+		}
+		const float PI = 3.1415;
+		const float angle1 = PI *0.25;
+		const float angle2 = -PI *0.75;
+
+		void main()	{
+			vec2 newUV = (vUv - vec2(0.5))*resolution.zw + vec2(0.5);
+
+			vec4 disp = texture2D(displacement, newUV);
+			vec2 dispVec = vec2(disp.r, disp.g);
+
+			vec2 distortedPosition1 = newUV + getRotM(angle1) * dispVec * intensity * progress;
+			vec4 t1 = texture2D(textureFrom, distortedPosition1);
+
+			vec2 distortedPosition2 = newUV + getRotM(angle2) * dispVec * intensity * (1.0 - progress);
+			vec4 t2 = texture2D(textureTo, distortedPosition2);
+
+			gl_FragColor = mix(t1, t2, progress);
+
+		}
+	`,
+  })
+}
+
+function type5(props: ISketchProps) {
+  const { images, container, duration = 1.5 } = props
+  return new Sketch({
+    duration,
+    images,
+    container,
+    debug: false,
+    uniforms: {
+      intensity: { value: 50.0, type: 'f', min: 1.0, max: 100 },
+    },
+    fragment: `
+		uniform float time;
+		uniform float progress;
+		uniform float intensity;
+		uniform float width;
+		uniform float scaleX;
+		uniform float scaleY;
+		uniform float transition;
+		uniform float radius;
+		uniform float swipe;
+		uniform sampler2D textureFrom;
+		uniform sampler2D textureTo;
+		uniform sampler2D displacement;
+		uniform vec4 resolution;
+		varying vec2 vUv;
+		mat2 rotate(float a) {
+			float s = sin(a);
+			float c = cos(a);
+			return mat2(c, -s, s, c);
+		}
+		const float PI = 3.1415;
+		const float angle1 = PI *0.25;
+		const float angle2 = -PI *0.75;
+
+		const float noiseSeed = 2.;
+
+		float random() { 
+			return fract(sin(noiseSeed + dot(gl_FragCoord.xy / resolution.xy / 10.0, vec2(12.9898, 4.1414))) * 43758.5453);
+		}
+
+		float hash(float n) { return fract(sin(n) * 1e4); }
+		float hash(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }
+
+		float hnoise(vec2 x) {
+			vec2 i = floor(x);
+			vec2 f = fract(x);
+
+			float a = hash(i);
+			float b = hash(i + vec2(1.0, 0.0));
+			float c = hash(i + vec2(0.0, 1.0));
+			float d = hash(i + vec2(1.0, 1.0));
+
+			vec2 u = f * f * (3.0 - 2.0 * f);
+			return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+		}
+
+		void main()	{
+			vec2 newUV = (vUv - vec2(0.5))*resolution.zw + vec2(0.5);
+			
+			float hn = hnoise(newUV.xy * resolution.xy / 100.0);
+
+			vec2 d = vec2(0.,normalize(vec2(0.5,0.5) - newUV.xy).y);
+
+			vec2 uv1 = newUV + d * progress / 5.0 * (1.0 + hn / 2.0);
+			vec2 uv2 = newUV - d * (1.0 - progress) / 5.0 * (1.0 + hn / 2.0);
+
+			vec4 t1 = texture2D(textureFrom,uv1);
+			vec4 t2 = texture2D(textureTo,uv2);
+
+			gl_FragColor = mix(t1, t2, progress);
+		}
+	`,
+  })
+}
+
 export function createSketch(type: SketchType) {
   const builderMap: Record<SketchType, (props: ISketchProps) => Sketch> = {
     [SketchType.Type1]: type1,
     [SketchType.Type2]: type2,
+    [SketchType.Type3]: type3,
+    [SketchType.Type4]: type4,
+    [SketchType.Type5]: type5,
   }
   return builderMap[type]
 }

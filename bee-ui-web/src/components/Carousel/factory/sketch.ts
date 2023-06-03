@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import gsap, { Power2 } from 'gsap'
-import defaultImg from '@/views/home/imgs/default.jpeg'
+import dispImg from './imgs/disp1.jpg'
 
 export class Sketch {
   private scene = new THREE.Scene()
@@ -123,7 +123,7 @@ export class Sketch {
         radius: { type: 'f', value: 0 } as THREE.IUniform,
         textureFrom: { type: 'f', value: this.textures[0] } as THREE.IUniform,
         textureTo: { type: 'f', value: this.textures[1] } as THREE.IUniform,
-        displacement: { type: 'f', value: new THREE.TextureLoader().load(defaultImg) } as THREE.IUniform,
+        displacement: { type: 'f', value: new THREE.TextureLoader().load(dispImg) } as THREE.IUniform,
         resolution: { type: 'v4', value: new THREE.Vector4() } as THREE.IUniform,
       },
       vertexShader: this.vertex,
