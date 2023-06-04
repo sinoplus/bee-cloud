@@ -4,14 +4,14 @@ import type { ISketchProps } from './factory'
 import { SketchType, createSketch } from './factory'
 import type Sketch from './factory/sketch'
 
-interface IProps {
+interface ICarouselProps {
   images: string[]
   sketchType?: SketchType
   autoplay?: boolean
   intervals?: number
 }
 
-const props = withDefaults<IProps>(defineProps<IProps>(), {
+const props = withDefaults<ICarouselProps>(defineProps<ICarouselProps>(), {
   sketchType: SketchType.Type1,
   autoplay: true,
   intervals: 3000,
@@ -63,6 +63,7 @@ async function jumpTo(index) {
 }
 
 function handleUnmount() {
+  stop()
   sketch.value?.destroy?.()
 }
 
@@ -94,14 +95,14 @@ nextTick(() => {
     <div ref="carouselRef" :class="styles.carousel" @mouseover.stop="stop" @mouseout.stop="start" />
     <nav v-if="sketch" :class="styles.pagination">
       <ul>
-        <li v-for="(_, i) in images" :key="i" :class="{ [styles.active]: i === activeIndex }" @click="jumpTo(i)" />
+        <li v-for="(_, i) in images.length" :key="i" :class="{ [styles.active]: i === activeIndex }" @click="jumpTo(i)" />
         <li :class="styles.slider" />
       </ul>
     </nav>
   </div>
 </template>
 
-<style module lang="scss">
+<style lang="scss" module>
 $bullet-bg: #1a1a1a;
 $bullet-bg-active: rgba(250, 0, 146, 0.72);
 $bullet-size: 7px;
