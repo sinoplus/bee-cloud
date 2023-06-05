@@ -4,7 +4,7 @@ import { computed, ref, toRefs, useCssModule } from 'vue'
 interface INavbarItemProps {
   label: string
   value: string
-  showExpand?: boolean
+  hasPop?: boolean
 }
 
 interface INavbarProps {
@@ -21,23 +21,23 @@ const { items: navs, height } = toRefs(props)
 
 const styles = useCssModule()
 
-const isShow = ref<boolean>(false)
+const showPop = ref<boolean>(false)
 const hoverPath = ref<string>('') // 悬浮中的元素
 const activeValue = ref<string>('')
 activeValue.value = navs?.value?.[0]?.value ?? ''
 
 // 当前悬浮的nav
-const currentValue = computed(() => isShow.value ? hoverPath.value : activeValue.value)
+const currentValue = computed(() => showPop.value ? hoverPath.value : activeValue.value)
 const currentNav = computed(() => navs?.value!.find(nav => nav.value === currentValue.value))
-const showExpand = computed(() => isShow.value)
+const hasPop = computed(() => showPop.value)
 
 function mouseover(path) {
-  isShow.value = true
+  showPop.value = true
   hoverPath.value = path
 }
 
 function mouseleave() {
-  isShow.value = false
+  showPop.value = false
   hoverPath.value = ''
 }
 
@@ -56,11 +56,11 @@ function handleChange(item: INavbarItemProps) {
         </li>
         <li :class="styles.slider" />
       </ul>
-      <div :class="[styles.expand, !showExpand ? styles.up : styles.down]">
+      <div :class="[styles.pop, !hasPop ? styles.up : styles.down]">
         <template v-for="nav in navs" :key="nav.value">
-          <slot name="expand" :data="nav">
-            <slot v-if="currentNav?.value === nav.value" :name="nav.value" :data="nav" />
-          </slot>
+          <span v-if="currentNav?.value === nav.value" @click="handleChange(nav)">
+            <slot :name="nav.value" :data="nav" />
+          </span>
         </template>
       </div>
     </nav>
@@ -75,7 +75,6 @@ $navOffsetX: calc(($navWidth - $navWidthActive) / 2);
 $navNum: 20;
 
 .container {
-  z-index: 99;
   height: $height;
   nav {
     height: 100%;
@@ -98,32 +97,31 @@ $navNum: 20;
         line-height: inherit;
         text-align: center;
 
-        a {
-          text-decoration: none;
-        }
-
         @for $i from 1 to $navNum + 1 {
-          &:nth-child(#{$i}):hover ~ .slider,
           &:nth-child(#{$i}).current ~ .slider {
             left: $navWidth * ($i - 1) + $navOffsetX;
           }
         }
-      }
 
-      .slider {
-        position: absolute;
-        bottom: 0;
-        left: $navOffsetX;
-        width: $navWidthActive;
-        height: 100%;
-        z-index: -1;
-        border-radius: 4px;
-        background-color: #d1dbe570;
-        transition: left ease 0.4s;
+        a {
+          text-decoration: none;
+        }
+
+        &.slider {
+          position: absolute;
+          bottom: 0;
+          left: $navOffsetX;
+          width: $navWidthActive;
+          height: 100%;
+          z-index: -1;
+          border-radius: 4px;
+          background-color: #d1dbe570;
+          transition: left ease 0.4s;
+        }
       }
     }
 
-    .expand {
+    .pop {
       max-height: 0;
       transition: max-height 0.4s linear;
       position: absolute;

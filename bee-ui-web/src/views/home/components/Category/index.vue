@@ -16,6 +16,7 @@ interface ICategoryProps {
 const props = withDefaults<ICategoryProps>(defineProps<ICategoryProps>(), {})
 const { name, items } = toRefs<ICategoryProps>(props)
 const styles = useCssModule()
+// const showExpand = computed(() => isShow.value)
 </script>
 
 <template>
@@ -33,6 +34,13 @@ const styles = useCssModule()
             </div>
           </li>
         </ul>
+        <!--        <div :class="[styles.expand, !showExpand ? styles.up : styles.down]"> -->
+        <!--          <template v-for="nav in navs" :key="nav.value"> -->
+        <!--            <slot name="expand" :data="nav"> -->
+        <!--              <slot v-if="currentNav?.value === nav.value" :name="nav.value" :data="nav" /> -->
+        <!--            </slot> -->
+        <!--          </template> -->
+        <!--        </div> -->
       </nav>
     </div>
   </div>

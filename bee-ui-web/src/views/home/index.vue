@@ -175,7 +175,7 @@ const styles = useCssModule()
             <Category name="全部商品分类" :items="cateItems" />
           </div>
           <Navbar :height="navHeight" :items="navs" @change="nav => console.log(nav)">
-            <template v-for="nav in navs" :key="nav.value" #[nav.value]>
+            <template v-for="nav in navs.filter(a => a.value !== 'home')" :key="nav.value" #[nav.value]>
               <div :class="styles.expand">
                 {{ nav.label }}
               </div>

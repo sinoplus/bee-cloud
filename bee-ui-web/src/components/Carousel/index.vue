@@ -150,6 +150,10 @@ $duration: v-bind(duration);
         opacity: .3;
         transition: opacity ease $duration;
 
+        &:hover {
+          transform: scale(1.3);
+        }
+
         &.active {
           opacity: 0;
         }
@@ -161,22 +165,21 @@ $duration: v-bind(duration);
               content: '#{$i}';
               position: absolute;
               left: calc($bullet-size / 2);
-              line-height: 12px;
+              line-height: 13px;
             }
           }
         }
-      }
-
-      .slider {
-        position: absolute;
-        left: - calc($bullet-size / 2);
-        width: $bullet-size * 2;
-        height: $bullet-size * 2;
-        line-height: $bullet-size * 2;
-        background-color: $bullet-bg-active;
-        opacity: 1;
-        transform: scale(0.85);
-        transition: left ease $duration;
+        &.slider {
+          position: absolute;
+          left: - calc($bullet-size / 2);
+          width: $bullet-size * 2;
+          height: $bullet-size * 2;
+          line-height: $bullet-size * 2;
+          background-color: $bullet-bg-active;
+          opacity: 1;
+          transform: scale(0.85);
+          transition: left ease $duration;
+        }
       }
     }
   }
