@@ -4,7 +4,7 @@ import type { App } from 'vue'
 export default {
   install: (app: App) => {
     for (const key in components) {
-      const componentConfig = components[key]
+      const componentConfig = (components as any)[key]
       app.component(componentConfig.name, componentConfig)
     }
   },

@@ -211,36 +211,26 @@ export class Sketch {
       const len = this.textures.length
       const idx = (index + len) % len
       const nextTexture = this.textures[idx]
+      let transition
       if (index < this.current) {
         this.material.uniforms.textureFrom.value = nextTexture
-        this.material.uniforms.textureTo.value = this.textures[this.current]
-        tl.from(this.material.uniforms.progress, this.duration, {
-          value: 1,
-          ease: (Power2 as any)[this.easing],
-          onComplete: () => {
-            this.current = idx
-            this.material.uniforms.textureTo.value = nextTexture
-            this.material.uniforms.progress.value = 0
-            this.isRunning = false
-            resolve(idx)
-          },
-        })
+        transition = tl.from
       }
       else {
-        this.material.uniforms.textureFrom.value = this.textures[this.current]
         this.material.uniforms.textureTo.value = nextTexture
-        tl.to(this.material.uniforms.progress, this.duration, {
-          value: 1,
-          ease: (Power2 as any)[this.easing],
-          onComplete: () => {
-            this.current = idx
-            this.material.uniforms.textureFrom.value = nextTexture
-            this.material.uniforms.progress.value = 0
-            this.isRunning = false
-            resolve(idx)
-          },
-        })
+        transition = tl.to
       }
+      transition?.(this.material.uniforms.progress, this.duration, {
+        value: 1,
+        ease: (Power2 as any)[this.easing],
+        onComplete: () => {
+          this.current = idx
+          this.material.uniforms.textureTo.value = this.material.uniforms.textureFrom.value = nextTexture
+          this.material.uniforms.progress.value = 0
+          this.isRunning = false
+          resolve(idx)
+        },
+      })
     })
   }
 

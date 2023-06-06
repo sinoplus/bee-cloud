@@ -1,7 +1,7 @@
 <script name="Carousel" setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref, toRefs, useCssModule } from 'vue'
 import type { ISketchProps } from './factory'
-import { SketchType, createSketch } from './factory'
+import { SketchType, generatorSketch } from './factory'
 import type Sketch from './factory/sketch'
 
 interface ICarouselProps {
@@ -27,7 +27,7 @@ const bulletIndex = ref<number>(0) // 跳转目标轮播图
 const duration = ref<string>('1.5s')
 
 const durationValue = computed(() => +String(duration.value).replace(/[^\d.-]/g, ''))
-const sketchFactory = computed(() => createSketch(sketchType.value))
+const sketchFactory = computed(() => generatorSketch(sketchType.value))
 const activeIndex = computed(() => {
   const index = bulletIndex.value % images.value.length
   return index < 0 ? index + images.value.length : index

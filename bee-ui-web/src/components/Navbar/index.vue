@@ -58,7 +58,7 @@ function handleChange(item: INavbarItemProps) {
       </ul>
       <div :class="[styles.pop, !hasPop ? styles.up : styles.down]">
         <template v-for="nav in navs" :key="nav.value">
-          <span v-if="currentNav?.value === nav.value" @click="handleChange(nav)">
+          <span v-show="currentNav?.value === nav.value" @click="handleChange(nav)">
             <slot :name="nav.value" :data="nav" />
           </span>
         </template>
@@ -134,6 +134,10 @@ $navNum: 20;
       color: #5a5a5a;
       background: rgba(256, 256, 256, 0.85);
       overflow: hidden;
+
+      &.up {
+        max-height: 0;
+      }
 
       &.down {
         max-height: 40vh;

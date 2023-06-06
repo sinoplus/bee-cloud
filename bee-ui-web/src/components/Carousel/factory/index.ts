@@ -14,13 +14,8 @@ export enum SketchType {
   Type5,
 }
 
-function type1(props: ISketchProps) {
-  const { images, container, duration = 1.5 } = props
-  return new Sketch({
-    duration,
-    images,
-    container,
-    debug: true,
+const transitionType = {
+  [SketchType.Type1]: {
     easing: 'easeOut',
     uniforms: {
       radius: {
@@ -74,16 +69,8 @@ function type1(props: ISketchProps) {
 		  gl_FragColor = mix( t1, t2, intpl );
 		}
 	`,
-  })
-}
-
-function type2(props: ISketchProps) {
-  const { images, container, duration = 1.5 } = props
-  return new Sketch({
-    duration,
-    images,
-    container,
-    debug: true,
+  },
+  [SketchType.Type2]: {
     easing: 'easeOut',
     uniforms: {
       width: { value: 0.5, type: 'f', min: 0, max: 10 },
@@ -282,16 +269,8 @@ function type2(props: ISketchProps) {
 			// gl_FragColor =vec4(maskvalue0,final,0.,1.);
 		}
 	`,
-  })
-}
-
-function type3(props: ISketchProps) {
-  const { images, container, duration = 1.5 } = props
-  return new Sketch({
-    duration,
-    images,
-    container,
-    debug: false,
+  },
+  [SketchType.Type3]: {
     easing: 'easeOut',
     uniforms: {
       // width: {value: 0.35, type:'f', min:0., max:1},
@@ -329,16 +308,8 @@ function type3(props: ISketchProps) {
 		  gl_FragColor = mix( t1, t2, intpl );
 		}
 	`,
-  })
-}
-
-function type4(props: ISketchProps) {
-  const { images, container, duration = 1.5 } = props
-  return new Sketch({
-    duration,
-    images,
-    container,
-    debug: true,
+  },
+  [SketchType.Type4]: {
     uniforms: {
       intensity: { value: 1, type: 'f', min: 0.0, max: 3 },
     },
@@ -382,16 +353,8 @@ function type4(props: ISketchProps) {
 
 		}
 	`,
-  })
-}
-
-function type5(props: ISketchProps) {
-  const { images, container, duration = 1.5 } = props
-  return new Sketch({
-    duration,
-    images,
-    container,
-    debug: false,
+  },
+  [SketchType.Type5]: {
     uniforms: {
       intensity: { value: 50.0, type: 'f', min: 1.0, max: 100 },
     },
@@ -457,21 +420,24 @@ function type5(props: ISketchProps) {
 			gl_FragColor = mix(t1, t2, progress);
 		}
 	`,
-  })
+  },
 }
 
-export function createSketch(type: SketchType) {
-  const builderMap: Record<SketchType, (props: ISketchProps) => Sketch> = {
-    [SketchType.Type1]: type1,
-    [SketchType.Type2]: type2,
-    [SketchType.Type3]: type3,
-    [SketchType.Type4]: type4,
-    [SketchType.Type5]: type5,
+export function generatorSketch(type: SketchType) {
+  const data = transitionType[type]
+  return function (props: ISketchProps) {
+    const { images, container, duration = 1.5 } = props
+    return new Sketch({
+      duration,
+      images,
+      container,
+      debug: true,
+      ...data,
+    })
   }
-  return builderMap[type]
 }
 
 export default {
-  createSketch,
+  generatorSketch,
   Sketch,
 }
