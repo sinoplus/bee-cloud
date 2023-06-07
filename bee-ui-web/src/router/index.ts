@@ -38,11 +38,6 @@ export const constantRoutes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/login',
-    component: () => import('@/views/login.vue'),
-    hidden: true,
-  },
-  {
     path: '/register',
     component: () => import('@/views/register.vue'),
     hidden: true,
@@ -60,34 +55,12 @@ export const constantRoutes: RouteRecordRaw[] = [
   {
     path: '',
     component: Layout,
-    redirect: '/index',
+    redirect: '/home',
     children: [
       {
-        path: '/index',
-        component: () => import('@/views/index.vue'),
-        name: 'Index',
-        meta: {
-          title: '首页',
-          icon: 'dashboard',
-          affix: true,
-        },
-      },
-    ],
-  },
-  {
-    path: '/user',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'profile',
-        component: () => import('@/views/system/user/profile/index.vue'),
-        name: 'Profile',
-        meta: {
-          title: '个人中心',
-          icon: 'user',
-        },
+        path: '/home',
+        component: () => import('@/views/home/index.vue'),
+        hidden: true,
       },
     ],
   },

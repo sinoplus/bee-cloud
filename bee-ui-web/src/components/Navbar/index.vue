@@ -1,18 +1,18 @@
-<script setup name="Home" lang="ts">
-import { computed, ref, toRefs, useCssModule } from 'vue'
+<script setup name="Navigation" lang="ts">
+import { computed, ref, toRefs, useCssModule, watch } from 'vue'
 
-interface INavbarItemProps {
+export interface INaviItemProps {
   label: string
   value: string
   hasPop?: boolean
 }
 
-interface INavbarProps {
-  items: INavbarItemProps[]
+interface INaviProps {
+  items: INaviItemProps[]
   height?: string
 }
 
-const props = withDefaults<INavbarProps>(defineProps<INavbarProps>(), {
+const props = withDefaults<INaviProps>(defineProps<INaviProps>(), {
   height: '40px',
 })
 
@@ -21,27 +21,26 @@ const { items: navs, height } = toRefs(props)
 
 const styles = useCssModule()
 
-const showPop = ref<boolean>(false)
-const hoverPath = ref<string>('') // 悬浮中的元素
-const activeValue = ref<string>('')
-activeValue.value = navs?.value?.[0]?.value ?? ''
+const hoverValue = ref<string>('') // 悬浮中的值
+const activeValue = ref<string>('') // 选中的值
+watch(navs, (newVal) => {
+  activeValue.value = newVal?.[0]?.value ?? ''
+}, { immediate: true })
 
-// 当前悬浮的nav
-const currentValue = computed(() => showPop.value ? hoverPath.value : activeValue.value)
-const currentNav = computed(() => navs?.value!.find(nav => nav.value === currentValue.value))
-const hasPop = computed(() => showPop.value)
+// 当前的nav
+const currentValue = computed(() => hoverValue.value || activeValue.value)
+const currentNav = computed(() => navs?.value?.find(nav => nav.value === currentValue.value) ?? {})
+const showPop = computed(() => !!hoverValue.value)
 
-function mouseover(path) {
-  showPop.value = true
-  hoverPath.value = path
+function mouseenter(value) {
+  hoverValue.value = value
 }
 
 function mouseleave() {
-  showPop.value = false
-  hoverPath.value = ''
+  hoverValue.value = ''
 }
 
-function handleChange(item: INavbarItemProps) {
+function handleChange(item: INaviItemProps) {
   activeValue.value = item.value
   emit('change', item)
 }
@@ -51,17 +50,22 @@ function handleChange(item: INavbarItemProps) {
   <div :class="styles.container">
     <nav :class="styles.navs" @mouseleave.stop="mouseleave">
       <ul @mousemove.stop="mouseleave">
-        <li v-for="nav in navs" :key="nav.value" :class="{ [styles.current]: currentValue === nav.value }" @click="handleChange(nav)" @mouseenter.stop="mouseover(nav.value)" @mousemove.stop>
+        <li
+          v-for="nav in navs"
+          :key="nav.value"
+          :class="{ [styles.current]: currentValue === nav.value }"
+          @click="handleChange(nav)"
+          @mouseenter.stop="mouseenter(nav.value)"
+          @mousemove.stop
+        >
           <a href="#">{{ nav.label }}</a>
         </li>
         <li :class="styles.slider" />
       </ul>
-      <div :class="[styles.pop, !hasPop ? styles.up : styles.down]">
-        <template v-for="nav in navs" :key="nav.value">
-          <span v-show="currentNav?.value === nav.value" @click="handleChange(nav)">
-            <slot :name="nav.value" :data="nav" />
-          </span>
-        </template>
+      <div :class="[styles.pop, !showPop ? styles.up : styles.down]">
+        <span @click="handleChange(currentNav)">
+          <slot name="pop" :data="currentNav" />
+        </span>
       </div>
     </nav>
   </div>
@@ -140,7 +144,7 @@ $navNum: 20;
       }
 
       &.down {
-        max-height: 40vh;
+        max-height: 220px;
       }
     }
   }

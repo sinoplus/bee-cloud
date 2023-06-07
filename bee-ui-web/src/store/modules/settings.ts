@@ -47,8 +47,12 @@ const useSettingsStore = defineStore('settings', {
         key,
         value,
       } = data
-      if (this.hasOwnProperty(key))
+      // eslint-disable-next-line no-prototype-builtins
+      if (this.hasOwnProperty(key)) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         this[key] = value
+      }
     },
     // 设置网页标题
     setTitle(title: string) {
