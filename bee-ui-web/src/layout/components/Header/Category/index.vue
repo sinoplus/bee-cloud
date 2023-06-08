@@ -70,19 +70,19 @@ function handleChange(item: ICateProps) {
 <style lang="scss" module>
 $width: 240px;
 $titleHeight: 40px;
-$bodyMinHeight: 400px;
+$bodyMinHeight: 480px;
 
 .container {
   width: $width;
   .title {
     border-radius: 12px 12px 0 0;
-    background-color: #6c5c81;
+    background-color: #352b6cc2;
     text-align: center;
     height: $titleHeight;
   }
   .body {
     border-radius: 0 0 6px 6px;
-    background-color: rgb(59 74 104 / 61%);
+    background-color: #352b6c6e;
     min-height: $bodyMinHeight;
     position: relative;
     nav {

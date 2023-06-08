@@ -93,7 +93,7 @@ nextTick(() => {
 <template>
   <div :class="styles.container">
     <div ref="carouselRef" :class="styles.carousel" @mouseover.stop="stop" @mouseout.stop="start" />
-    <nav v-if="sketch" :class="styles.pagination">
+    <nav v-if="sketch && images.length > 1" :class="styles.pagination">
       <ul>
         <li v-for="(_, i) in images.length" :key="i" :class="{ [styles.active]: i === activeIndex }" @click="jumpTo(i)" />
         <li :class="styles.slider" />
@@ -118,7 +118,7 @@ $duration: v-bind(duration);
     cursor: pointer;
   }
 
-  nav.pagination {
+  .pagination {
     width: 100%;
     text-align: center;
     height: 0;
@@ -149,15 +149,12 @@ $duration: v-bind(duration);
         cursor: pointer;
         opacity: .3;
         transition: opacity ease $duration;
-
         &:hover {
           transform: scale(1.3);
         }
-
         &.active {
           opacity: 0;
         }
-
         @for $i from 1 to 20 {
           &:nth-child(#{$i}).active ~ .slider {
             left: calc(($bullet-interval * 2 + $bullet-size) * ($i - 1) - $bullet-size / 2);

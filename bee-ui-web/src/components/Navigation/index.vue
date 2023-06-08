@@ -74,14 +74,15 @@ function handleChange(item: INaviItemProps) {
 <style module lang="scss">
 $height: v-bind(height);
 $navWidth: 120px;
-$navWidthActive: 100px;
+$navWidthActive: calc($navWidth * 0.85);
 $navOffsetX: calc(($navWidth - $navWidthActive) / 2);
-$navNum: 20;
+$navMaxNum: 8;
 
 .container {
   height: $height;
   nav {
     height: 100%;
+    text-align: center;
 
     ul, li {
       margin: 0;
@@ -101,7 +102,7 @@ $navNum: 20;
         line-height: inherit;
         text-align: center;
 
-        @for $i from 1 to $navNum + 1 {
+        @for $i from 1 to $navMaxNum + 1 {
           &:nth-child(#{$i}).current ~ .slider {
             left: $navWidth * ($i - 1) + $navOffsetX;
           }

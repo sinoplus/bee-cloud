@@ -1,6 +1,7 @@
 <script setup name="Home" lang="ts">
 import { useCssModule } from 'vue'
 import Flash from './components/Flash'
+import ProductCategory from './components/ProductCategory'
 
 const styles = useCssModule()
 </script>
@@ -9,6 +10,7 @@ const styles = useCssModule()
   <div :class="styles.container">
     <div :class="styles['full-row']">
       <Flash />
+      <ProductCategory />
     </div>
   </div>
 </template>
