@@ -100,7 +100,7 @@ export class Sketch {
             this.textures[i] = texture
             resolve(texture)
           },
-          undefined,
+          (e: ProgressEvent) => e,
           reject,
         )
       })

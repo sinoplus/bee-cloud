@@ -111,10 +111,12 @@ $duration: v-bind(duration);
 
 .container {
   height: 100%;
+  width: 100%;
   position: relative;
 
   .carousel {
     height: 100%;
+    width: 100%;
     cursor: pointer;
   }
 
@@ -160,6 +162,7 @@ $duration: v-bind(duration);
             left: calc(($bullet-interval * 2 + $bullet-size) * ($i - 1) - $bullet-size / 2);
             &:before {
               content: '#{$i}';
+              color: white;
               position: absolute;
               left: calc($bullet-size / 2);
               line-height: 13px;

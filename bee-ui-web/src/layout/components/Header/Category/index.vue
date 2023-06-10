@@ -76,13 +76,13 @@ $bodyMinHeight: 480px;
   width: $width;
   .title {
     border-radius: 12px 12px 0 0;
-    background-color: #352b6cc2;
+    background-color: rgb(218 52 138);
     text-align: center;
     height: $titleHeight;
   }
   .body {
     border-radius: 0 0 6px 6px;
-    background-color: #352b6c6e;
+    background-color: rgb(112 53 84 / 60%);
     min-height: $bodyMinHeight;
     position: relative;
     nav {
@@ -121,6 +121,7 @@ $bodyMinHeight: 480px;
             padding: 0 4px;
             &:hover {
               color: #fd5fae;
+              font-weight: bold;
             }
           }
 

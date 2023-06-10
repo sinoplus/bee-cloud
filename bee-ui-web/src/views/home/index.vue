@@ -10,19 +10,25 @@ const styles = useCssModule()
   <div :class="styles.container">
     <div :class="styles['full-row']">
       <Flash />
-      <ProductCategory />
+      <div :class="styles['product-category']">
+        <ProductCategory />
+      </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" module>
-.container{
+.container {
   width: 100%;
   margin: 0 auto;
   max-width: 1300px;
 
   .full-row {
-    margin: 15px 0;
+    margin: 12px 0;
+
+    .product-category {
+      margin-top: 15px;
+    }
   }
 }
 </style>
