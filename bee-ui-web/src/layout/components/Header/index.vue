@@ -2,6 +2,7 @@
 import { computed, ref, useCssModule } from 'vue'
 import { Shop } from '@element-plus/icons-vue'
 import Category from './Category'
+import Login from './Login'
 import Navigation from '@/components/Navigation'
 import Carousel from '@/components/Carousel'
 import Search from '@/components/Search'
@@ -33,9 +34,11 @@ const categoryList = computed(() => naviStore.categoryList)
         </div>
         <Search />
         <div>
-          <el-button link>
-            登录
-          </el-button>
+          <Login>
+            <el-button link>
+              登录
+            </el-button>
+          </Login>
           <el-button link>
             注册
           </el-button>
