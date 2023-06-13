@@ -19,7 +19,7 @@ public class WebSecurityConfigurer {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain filter(HttpSecurity httpSecurity) throws Exception {
         SavedRequestAwareAuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
         successHandler.setTargetUrlParameter("redirectTo");
         successHandler.setDefaultTargetUrl(adminContextPath + "/");
@@ -34,13 +34,13 @@ public class WebSecurityConfigurer {
             ).permitAll()
             .anyRequest().authenticated()
             .and()
-            .formLogin().loginPage(adminContextPath + "/login")
+            .formLogin().loginPage(adminContextPath + "/login") // 设置登录页
             .successHandler(successHandler).and()
-            .logout().logoutUrl(adminContextPath + "/logout")
+            .logout().logoutUrl(adminContextPath + "/logout") // 设置登出页
             .and()
-            .httpBasic().and()
+            .httpBasic().and() // 禁用basic明文验证
             .csrf()
-            .disable()
+            .disable() // 前后端分离架构不需要csrf保护
             .build();
     }
 }
