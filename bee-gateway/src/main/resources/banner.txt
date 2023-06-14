@@ -1,0 +1,48 @@
+Spring Boot Version: ${spring-boot.version}
+Spring Application Name: ${spring.application.name}
+                  ::
+                titf Ljt
+              iit;,;tfi;i
+              jfii;,Ljjii,;
+             ifititjftti;,;;
+             jtttiiiffft;,,,,
+            ifLjtitjjfti,;,;,
+            ttfjttjLLftit:;,,,
+           ,tjijLfGGGLj;,;:,:,
+           i;jjjfLGGLLft;::,,,;
+          j;tttGLGGLLLfj;,.:::,;
+         tt;,;GGGGGGLLjjt,: ..:t
+         t;;;fDGDGLLLLLjfi,....:t
+         i,.,Dffjtjffjiiti;:..:.i
+        i;;.:LLDGfjffjjLfft;: ..,
+        if,:;DLtt,jLLft;,;tt.: .:
+        i.D.:jEGfjLtGLfttjLLj: G:;
+       ...K,.KKEDGGGEffLLGGLL jE.j
+        : KW.KEDGGEKEGjLGGGDj GE:j
+       j;.DEEKEGfjEKDDGtfLGG,EG :t
+       jj .KEiDLjfLLjjLjjfLLEGG..i
+       jj: KKKLffGELffLLfjjDDD  :i
+       f;: GKKKffGDfLfGLfLEELL   ;j
+       ft;.:KEKEfLjffLtffKKDG   ..;
+        i::,KKKKDfGffjLjKKGDD  .,.:;
+       i;,,;.EKKKDGGLLfKKGLLf  .;,.,i
+       ;;i;, DKEEEjGGGKKDLfj    ,;,::
+       i;ii.  EKKEEjLKKDGLf     :;iLfjffj
+       tt,i:  ;KWKK:fKEDGL    ...iijGftfti
+       ji;;:.  KWKEGEKKEG,:.  ;::;;tfLffff,
+       tt:,,:  WWKKDKWKEG...,ii,;t;Gi. .  ,
+      tt::;;:  WWKKEWWjE;i;:;,i,t ;ijjtt   i,
+     ff,. ;;;. #WWKGWtit;iiDj,;;,;,,ijt; ; ..
+     Lj:. ,i;ttfEKKjji;i;,jtji::,tt;iji;.;,ij,
+    jLji.;iti;W#WGfi:;,iL;jt ::fjtt;jt;.;;i;,;
+   ,ttjfjjjiji#WWjjt,:;;;iLfiijtii,;ji;::,t,;i
+  Giji,tttijt;#WWjjj::,,,Gjft;j;ti,ij;;,,,:,;i
+ifLi;,tt;,jfiW#Wttii.:,ii:fft f;;; i;,;,,,,,ii
+tfjit,,.;tjt;#Wfttt,:G,i;ifjj;t;i:t;i;ii,,,;i;
+:fjj;;ifjffj;Wjtjti,::ijttfjf;,,,;:,:,;;;,;;;;
+:,ttit;fGLjtftjit;j,.:tjjjfffi.:,:::::,,;;;;it
+:.,,,:Lfff tLtiiti,..:itjjLfjt..;::::::,,;itjf
+,:ftttKff .Dttiiii,:::,ffjffjj;,,,,,,,,;;ttfff
+,;Lt;fLt ,ttit;;;;:.:iiffffffji..tfLLtttfLLLff
+,ft;;Lf  Diji,;;;,:..:;tfjjjjjt;ff;ttjjfffffjj
+ji;;jf :Gt;i;,,,,,..:,;tffffffj,ttjfiiiitjfffj

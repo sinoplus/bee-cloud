@@ -1,0 +1,5 @@
+com.bee.common.translation.config.TranslationConfig
+com.bee.common.translation.core.impl.DeptNameTranslationImpl
+com.bee.common.translation.core.impl.DictTypeTranslationImpl
+com.bee.common.translation.core.impl.OssUrlTranslationImpl
+com.bee.common.translation.core.impl.UserNameTranslationImpl

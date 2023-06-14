@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.bee</groupId>
+        <artifactId>bee-cloud</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <modules>
+        <module>bee-common-bom</module>
+        <module>bee-common-alibaba-bom</module>
+        <module>bee-common-log</module>
+        <module>bee-common-dict</module>
+        <module>bee-common-excel</module>
+        <module>bee-common-core</module>
+        <module>bee-common-redis</module>
+        <module>bee-common-doc</module>
+        <module>bee-common-security</module>
+        <module>bee-common-satoken</module>
+        <module>bee-common-web</module>
+        <module>bee-common-mybatis</module>
+        <module>bee-common-job</module>
+        <module>bee-common-dubbo</module>
+        <module>bee-common-seata</module>
+        <module>bee-common-loadbalancer</module>
+        <module>bee-common-oss</module>
+        <module>bee-common-idempotent</module>
+        <module>bee-common-mail</module>
+        <module>bee-common-sms</module>
+        <module>bee-common-logstash</module>
+        <module>bee-common-elasticsearch</module>
+        <module>bee-common-sentinel</module>
+        <module>bee-common-skylog</module>
+        <module>bee-common-prometheus</module>
+        <module>bee-common-translation</module>
+        <module>bee-common-encrypt</module>
+    </modules>
+
+    <artifactId>bee-common</artifactId>
+    <packaging>pom</packaging>
+
+    <description>
+        bee-common通用模块
+    </description>
+
+</project>

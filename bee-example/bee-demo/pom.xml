@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.bee</groupId>
+        <artifactId>bee-example</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>bee-demo</artifactId>
+
+    <description>
+        bee-demo 演示模块
+    </description>
+
+    <dependencies>
+
+        <!-- SpringCloud Alibaba Nacos -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+
+        <!-- SpringCloud Alibaba Nacos Config -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.bee</groupId>
+            <artifactId>bee-common-sentinel</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.bee</groupId>
+            <artifactId>bee-common-log</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.bee</groupId>
+            <artifactId>bee-common-doc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.bee</groupId>
+            <artifactId>bee-common-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.bee</groupId>
+            <artifactId>bee-common-mybatis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.bee</groupId>
+            <artifactId>bee-common-dubbo</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.bee</groupId>
+            <artifactId>bee-common-idempotent</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.bee</groupId>
+            <artifactId>bee-common-mail</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.bee</groupId>
+            <artifactId>bee-common-sms</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.bee</groupId>
+            <artifactId>bee-common-encrypt</artifactId>
+        </dependency>
+
+        <!-- 短信 用哪个导入哪个依赖 -->
+        <!--        <dependency>-->
+        <!--            <groupId>com.aliyun</groupId>-->
+        <!--            <artifactId>dysmsapi20170525</artifactId>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>com.tencentcloudapi</groupId>-->
+        <!--            <artifactId>tencentcloud-sdk-java-sms</artifactId>-->
+        <!--        </dependency>-->
+
+        <dependency>
+            <groupId>com.bee</groupId>
+            <artifactId>bee-common-elasticsearch</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
